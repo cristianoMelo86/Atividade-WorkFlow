@@ -1,11 +1,20 @@
 var gulp = require("gulp");
 var scss = require('gulp-sass');
 var cssmin = require('gulp-cssmin');
+var htmlmin = require('gulp-htmlmin');
+
+
+// FN Minify HTML
+gulp.task('minify', function() {
+  return gulp.src('./source/*.html')
+    .pipe(htmlmin({collapseWhitespace: true}))
+    .pipe(gulp.dest('./code/'));
+});
 
 
 // FN Transforma Scss em Css
 gulp.task('scss', function () {
-   	 return gulp.src('./source/scss/*.scss')
+   	 return gulp.src('./source/dist/css/*.scss')
         .pipe(scss({outputStyle: 'compressed'}))
         .pipe(gulp.dest('./css'));
 	});
@@ -17,17 +26,11 @@ gulp.task('move-css', function(){
 		   .pipe(gulp.dest("./dist/css"));
 });
 
-// FN Minificar Css
-gulp.task('min', function () {
-    gulp.src('./dist/*.css')
-        .pipe(cssmin())
-        .pipe(gulp.dest('./dist/css/'));
-});
 
 
 //FN Monitorar arquivo
 gulp.task('background', function(){
-	gulp.watch('./source/scss/*.scss', ['move-css']);
+	gulp.watch('./source/scss/*.scss', ['move-css', 'scss' ]);
 });
 
 
