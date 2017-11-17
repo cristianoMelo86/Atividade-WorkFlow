@@ -1,53 +1,42 @@
 var gulp = require("gulp");
-var cssmin = require('gulp-cssmin');
-var sass = require('gulp-sass');
+var scss = require('gulp-sass');
+let cleanCSS = require('gulp-clean-css');
 var htmlmin = require('gulp-htmlmin');
 
 
-// FN Minify HTML
+// TASK Minify HTML
 gulp.task('minify', function() {
   return gulp.src('./source/*.html')
     .pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest('./dist/'));
 });
 
-
-gulp.task('sass', function(){
+// TASK SCSS e Minify CSS
+gulp.task('scss', function(){
     return gulp.src('./source/scss/*.scss')
-        .pipe(sass().on('error', sass.logError))
+        .pipe(scss())
+        .pipe(cleanCSS())
         .pipe(gulp.dest('./dist/css/'));
 });
 
+//TASK Minify CSS
+gulp.task('cleanCSS', function(){
+	return gulp.src("./dist/css/*.css")
+		   .pipe(cleanCSS())
+		   .pipe(gulp.dest("./dist/css/"));
+});
 
-// FN Mover arquivo
+// TASK Mover arquivo
 gulp.task('move-css', function(){
 	return gulp.src("./source/scss/*.scss")
 		   .pipe(gulp.dest("./dist/css/"));
 });
 
 
-
-//FN Monitorar arquivo
+//TASK Monitorar arquivo
 gulp.task('background', function(){
-	gulp.watch('./source/scss/*.scss', ['move-css', 'sass']);
+	gulp.watch('./source/scss/*.scss', ['scss']);
+	gulp.watch('./source/*.html', ['minify']);
 });
 
-
-
-
-
-
-gulp.task('um', function(){
-	console.log("tarefa um 1");
-});
-
-gulp.task('dois', function(){
-	console.log("tarefa dois 2");
-});
-
-
-//FN Monitorar arquivo
-gulp.task('watch', function(){
-	gulp.watch('./source/scss/*.scss', ['um', 'dois' ]);
-});
 
